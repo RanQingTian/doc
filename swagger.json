@@ -1,0 +1,1176 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "introduction for okr apis and additional apis of other service",
+    "version": "1.0.0",
+    "title": "Okr Apis"
+  },
+  "tags": [
+    {
+      "name": "okr"
+    },
+    {
+      "name": "organization"
+    },
+    {
+      "name": "customer"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/okrs/me": {
+      "get": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "get current user's okr",
+        "description": "",
+        "operationId": "find",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ObjectiveKeyResultDto"
+            }
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/okrs/history/me": {
+      "get": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "get current user's okr history",
+        "description": "",
+        "operationId": "findHistory",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OkrHistoryDto"
+            }
+          },
+          "400": {
+            "description": "okr not created"
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/okrs/history": {
+      "get": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "get current user's okr history",
+        "description": "",
+        "operationId": "findHistoryByOkrs",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "okrIds",
+            "in": "body",
+            "description": "ids of querying okrs",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OkrHistoryDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/okrs/subordinates": {
+      "get": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "get all the submitted okrs of current user's subordinates and other users who haven't submitted okr.",
+        "description": "",
+        "operationId": "findDirectSubordinates",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OkrWithNoneDto"
+            }
+          },
+          "401": {
+            "description": "no authentication"
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/okrs/without-score": {
+      "post": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "all the specific okrs of users without score in the user list",
+        "description": "",
+        "operationId": "findWithoutScore",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userIds",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/OkrWithNoneDto"
+              }
+            }
+          },
+          "400": {
+            "description": "exception about org data"
+          }
+        }
+      }
+    },
+    "/okrs/with-score": {
+      "post": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "all the specific okrs of users in the user list",
+        "description": "",
+        "operationId": "findWithScore",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userIds",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "filterSelf",
+            "in": "formData",
+            "required": false,
+            "default": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/OkrWithNoneDto"
+              }
+            }
+          },
+          "401": {
+            "description": "user has no authentication"
+          }
+        }
+      }
+    },
+    "/okrs": {
+      "put": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "create or update a specific okr",
+        "description": "",
+        "operationId": "update",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "reason",
+            "in": "formData",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "okrItems",
+            "in": "body",
+            "description": "list of OkrItem",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OkrItemDto"
+              }
+            },
+            "format": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "missing parameters(reason or items)"
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/okrs/evaluate": {
+      "put": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "evaluate okrs",
+        "description": "",
+        "operationId": "evaluate",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "return a map<String,IntArray>,key contains[UNSUBMITTED,UNEVALUATED,EVALUATED,CONFIMRED,PUBLISHED]"
+            }
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/okrs/publish": {
+      "put": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "publish okrs",
+        "description": "",
+        "operationId": "publish",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "return a map<String,IntArray>,key contains[UNSUBMITTED,UNEVALUATED,EVALUATED,CONFIMRED,PUBLISHED]"
+            }
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/okrs/confirm": {
+      "put": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "confirm okrs",
+        "description": "",
+        "operationId": "confirm",
+        "consumes": [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "period",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "description": "return a map<String,IntArray>,key contains[UNSUBMITTED,UNEVALUATED,EVALUATED,CONFIMRED,PUBLISHED]"
+            }
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/okrs/{okrId}/evaluation": {
+      "put": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "update okr evaluation",
+        "description": "",
+        "operationId": "updateEvaluation",
+        "consumes": [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "okrId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "evaluation",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/okrs/{okrId}/grade": {
+      "put": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "update okr grade",
+        "description": "",
+        "operationId": "updateGrade",
+        "consumes": [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "okrId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "confirmedScore",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "illegal parameters"
+          },
+          "401": {
+            "description": "no authentication"
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/okrs/{okrItemId}/score": {
+      "put": {
+        "tags": [
+          "okr"
+        ],
+        "summary": "update leader score of okr item",
+        "description": "",
+        "operationId": "updateLeaderScore",
+        "consumes": [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "okrItemId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "score",
+            "in": "formData",
+            "description": "",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "illegal parameters"
+          },
+          "401": {
+            "description": "no authentication"
+          },
+          "403": {
+            "description": "not log in"
+          }
+        }
+      }
+    },
+    "/organizations/relative/{userId}": {
+      "get": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "get user's relationship in organization",
+        "description": "",
+        "operationId": "findUserRelative",
+        "consumes": [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OrgUserRelativeDto"
+            }
+          }
+        }
+      }
+    },
+    "/customers": {
+      "get": {
+        "tags": [
+          "customer"
+        ],
+        "summary": "",
+        "description": "get all customers",
+        "operationId": "listAll",
+        "consumes": [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "application/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CustomerDto"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "customer"
+        ],
+        "summary": "",
+        "description": "create or update customer",
+        "operationId": "createOrUpdate",
+        "consumes": [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/CustomerDto"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CustomerDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "customers/{id}": {
+      "delete": {
+        "tags": [
+          "customer"
+        ],
+        "description": "delete customer",
+        "operationId": "delete",
+        "consumes": [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "customer id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ObjectiveKeyResultDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "unevaluated",
+            "evaluated",
+            "confirmed",
+            "published"
+          ],
+          "description": "no need in consume"
+        },
+        "evaluation": {
+          "type": "string"
+        },
+        "year": {
+          "type": "integer"
+        },
+        "period": {
+          "type": "integer",
+          "description": "only 1 or 2"
+        },
+        "selfScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "leaderScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "selfAchievementScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "selfGrowthScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "achievementScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "growthScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "confirmedScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "achievement": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OkrItemDto"
+          }
+        },
+        "growth": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OkrItemDto"
+          }
+        },
+        "canEvaluate": {
+          "type": "boolean"
+        }
+      },
+      "xml": {
+        "name": "ObjectiveKeyResultDto"
+      }
+    },
+    "UserDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "ADMIN",
+            "USER"
+          ]
+        }
+      },
+      "xml": {
+        "name": "UserDto"
+      }
+    },
+    "OkrWithNoneDto": {
+      "type": "object",
+      "properties": {
+        "okrs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ObjectiveKeyResultDto"
+          }
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "scoreScale": {
+          "type": "object",
+          "description": "this is a map with keys[\"4.0\",\"3.75\",\"3.5\",\"3.25\",\"0.0\"],values are the count of corresponding score."
+        }
+      },
+      "xml": {
+        "name": "OkrWithNoneDto"
+      }
+    },
+    "OkrHistoryDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "lastContent": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "OkrHistoryDto"
+      }
+    },
+    "OkrItemDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "okrId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "item_achievement_",
+            "item_growth",
+            "group_growth",
+            "self_growth"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "number",
+          "format": "double"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "selfScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "leaderScore": {
+          "type": "number",
+          "format": "double",
+          "description": "no need in consume case"
+        }
+      },
+      "xml": {
+        "name": "OkrItemDto"
+      }
+    },
+    "OrgUserRelativeDto": {
+      "type": "object",
+      "properties": {
+        "orgId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "manager": {
+          "type": "boolean"
+        },
+        "secondaryManager": {
+          "type": "boolean"
+        }
+      },
+      "xml": {
+        "name": "OrgUserRelativeDto"
+      }
+    },
+    "CustomerDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "uscc": {
+          "type": "string",
+          "description": "united social credit code"
+        },
+        "registerAddress": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "openingBank": {
+          "type": "string"
+        },
+        "bankAccount": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "CustomerDto"
+      }
+    },
+    "ContractDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "projectId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "customerId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "versionId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "totalAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "signedAt": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "xml": {
+        "name": "ContractDto"
+      }
+    },
+    "ContractSubAmountDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "contractId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "service"
+          ]
+        },
+        "taxRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "finished": {
+          "type": "boolean"
+        }
+      },
+      "xml": {
+        "name": "ContractSubAmountDto"
+      }
+    },
+    "LandmarkDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "contractId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "sign",
+            "sow",
+            "online",
+            "check",
+            "rest"
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "service"
+          ]
+        },
+        "remarks": {
+          "type": "string"
+        },
+        "billingAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "income": {
+          "type": "number",
+          "format": "double"
+        },
+        "planEndedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "actualEndedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "validatedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "billingAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "planReceiptedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "actualReceiptedAt": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "xml": {
+        "name": "LandmarkDto"
+      }
+    },
+    "ContractLandmarkDetailDTO": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/definitions/ContractDto"
+        },
+        "contractSubAmounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContractSubAmountDto"
+          }
+        },
+        "landmarks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandmarkDto"
+          }
+        }
+      },
+      "xml": {
+        "name": "ContractLandmarkDetailDTO"
+      }
+    }
+  }
+}
